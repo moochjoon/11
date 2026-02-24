@@ -1,0 +1,324 @@
+/* ============================================================
+   VARIABLES.CSS  —  Namak Messenger
+   Design tokens: colors, spacing, typography, shadows,
+   transitions, z-index, breakpoints
+   ============================================================ */
+
+/* ──────────────────────────────────────────────────────────
+   1. LIGHT THEME (default)
+────────────────────────────────────────────────────────── */
+:root {
+    /* Brand */
+    --brand:              #5B5EA6;
+    --brand-dark:         #4A4D8F;
+    --brand-light:        #7B7EC0;
+    --brand-alpha-10:     rgba(91, 94, 166, .10);
+    --brand-alpha-20:     rgba(91, 94, 166, .20);
+
+    /* Backgrounds */
+    --bg-app:             #F0F2F5;
+    --bg-sidebar:         #FFFFFF;
+    --bg-chat:            #EAE8E3;
+    --bg-surface:         #FFFFFF;
+    --bg-surface-2:       #F7F7F8;
+    --bg-surface-3:       #EFEFEF;
+    --bg-input:           #F0F2F5;
+    --bg-overlay:         rgba(0, 0, 0, .45);
+    --bg-modal:           #FFFFFF;
+    --bg-tooltip:         #1C1C1E;
+
+    /* Bubbles */
+    --bubble-in:          #FFFFFF;
+    --bubble-out:         #D9FDD3;
+    --bubble-in-shadow:   0 1px 2px rgba(0,0,0,.10);
+    --bubble-out-shadow:  0 1px 2px rgba(0,0,0,.10);
+
+    /* Text */
+    --text-primary:       #1C1C1E;
+    --text-secondary:     #636366;
+    --text-tertiary:      #AEAEB2;
+    --text-inverse:       #FFFFFF;
+    --text-link:          #5B5EA6;
+    --text-danger:        #FF3B30;
+    --text-success:       #34C759;
+    --text-warning:       #FF9500;
+
+    /* Border */
+    --border:             rgba(0, 0, 0, .08);
+    --border-strong:      rgba(0, 0, 0, .14);
+    --border-focus:       #5B5EA6;
+
+    /* Accent colors (user-selectable) */
+    --accent-blue:        #5B5EA6;
+    --accent-teal:        #0D9488;
+    --accent-rose:        #E11D48;
+    --accent-amber:       #D97706;
+    --accent-emerald:     #059669;
+    --accent-violet:      #7C3AED;
+    --accent-pink:        #DB2777;
+    --accent-sky:         #0284C7;
+
+    /* Active accent (changed by user) */
+    --accent:             var(--accent-blue);
+    --accent-bg:          var(--brand-alpha-10);
+
+    /* Status colors */
+    --online:             #34C759;
+    --offline:            #AEAEB2;
+    --away:               #FF9500;
+    --busy:               #FF3B30;
+
+    /* Functional */
+    --danger:             #FF3B30;
+    --danger-bg:          rgba(255, 59, 48, .10);
+    --success:            #34C759;
+    --success-bg:         rgba(52, 199, 89, .10);
+    --warning:            #FF9500;
+    --warning-bg:         rgba(255, 149, 0, .10);
+    --info:               #0A84FF;
+    --info-bg:            rgba(10, 132, 255, .10);
+
+    /* Tick / Read receipt */
+    --tick-sent:          #AEAEB2;
+    --tick-delivered:     #AEAEB2;
+    --tick-read:          #34B7F1;
+
+    /* Typography */
+    --font-family:        'Vazirmatn', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-family-mono:   'JetBrains Mono', 'Courier New', monospace;
+    --font-size-xs:       11px;
+    --font-size-sm:       12px;
+    --font-size-base:     14px;
+    --font-size-md:       15px;
+    --font-size-lg:       17px;
+    --font-size-xl:       20px;
+    --font-size-2xl:      24px;
+    --font-size-3xl:      30px;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semi:   600;
+    --font-weight-bold:   700;
+    --line-height:        1.55;
+    --letter-spacing:     0;
+
+    /* Spacing scale */
+    --sp-1:    4px;
+    --sp-2:    8px;
+    --sp-3:    12px;
+    --sp-4:    16px;
+    --sp-5:    20px;
+    --sp-6:    24px;
+    --sp-7:    28px;
+    --sp-8:    32px;
+    --sp-10:   40px;
+    --sp-12:   48px;
+    --sp-16:   64px;
+
+    /* Border radii */
+    --radius-sm:    6px;
+    --radius-md:    10px;
+    --radius-lg:    14px;
+    --radius-xl:    20px;
+    --radius-2xl:   24px;
+    --radius-full:  9999px;
+    --radius-bubble-in:  4px 16px 16px 16px;
+    --radius-bubble-out: 16px 4px 16px 16px;
+
+    /* Shadows */
+    --shadow-xs:   0 1px 2px rgba(0,0,0,.06);
+    --shadow-sm:   0 2px 8px rgba(0,0,0,.08);
+    --shadow-md:   0 4px 16px rgba(0,0,0,.10);
+    --shadow-lg:   0 8px 32px rgba(0,0,0,.12);
+    --shadow-xl:   0 16px 48px rgba(0,0,0,.16);
+    --shadow-inset:inset 0 1px 2px rgba(0,0,0,.06);
+
+    /* Transitions */
+    --transition-fast:   120ms ease;
+    --transition-base:   200ms ease;
+    --transition-slow:   320ms ease;
+    --transition-spring: 400ms cubic-bezier(.34, 1.56, .64, 1);
+    --transition-slide:  260ms cubic-bezier(.4, 0, .2, 1);
+
+    /* Z-index scale */
+    --z-base:       0;
+    --z-above:      10;
+    --z-dropdown:   100;
+    --z-sticky:     200;
+    --z-sidebar:    300;
+    --z-modal-bg:   400;
+    --z-modal:      500;
+    --z-toast:      600;
+    --z-tooltip:    700;
+    --z-call:       800;
+    --z-max:        9999;
+
+    /* Layout */
+    --sidebar-width:        340px;
+    --sidebar-collapsed:    72px;
+    --chat-max-width:       900px;
+    --header-height:        60px;
+    --input-area-height:    60px;
+    --bubble-max-width:     65%;
+    --avatar-xs:            24px;
+    --avatar-sm:            32px;
+    --avatar-md:            44px;
+    --avatar-lg:            56px;
+    --avatar-xl:            80px;
+    --avatar-2xl:           120px;
+
+    /* Scrollbar */
+    --scrollbar-w:          4px;
+    --scrollbar-thumb:      rgba(0,0,0,.15);
+    --scrollbar-track:      transparent;
+
+    /* Blur */
+    --blur-sm:    blur(8px);
+    --blur-md:    blur(16px);
+    --blur-lg:    blur(32px);
+}
+
+/* ──────────────────────────────────────────────────────────
+   2. DARK THEME
+────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+    --bg-app:             #0D0D0D;
+    --bg-sidebar:         #1A1A1A;
+    --bg-chat:            #0D0D0D;
+    --bg-surface:         #1C1C1E;
+    --bg-surface-2:       #242426;
+    --bg-surface-3:       #2C2C2E;
+    --bg-input:           #2C2C2E;
+    --bg-modal:           #1C1C1E;
+    --bg-overlay:         rgba(0, 0, 0, .65);
+
+    --bubble-in:          #1E1E1E;
+    --bubble-out:         #005C4B;
+
+    --text-primary:       #F2F2F7;
+    --text-secondary:     #AEAEB2;
+    --text-tertiary:      #636366;
+    --text-link:          #7B7EC0;
+
+    --border:             rgba(255, 255, 255, .08);
+    --border-strong:      rgba(255, 255, 255, .14);
+
+    --scrollbar-thumb:    rgba(255,255,255,.12);
+
+    --shadow-xs:   0 1px 2px rgba(0,0,0,.3);
+    --shadow-sm:   0 2px 8px rgba(0,0,0,.35);
+    --shadow-md:   0 4px 16px rgba(0,0,0,.40);
+    --shadow-lg:   0 8px 32px rgba(0,0,0,.45);
+    --shadow-xl:   0 16px 48px rgba(0,0,0,.55);
+}
+
+/* ──────────────────────────────────────────────────────────
+   3. SYSTEM THEME (auto)
+────────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+    [data-theme="system"] {
+        --bg-app:             #0D0D0D;
+        --bg-sidebar:         #1A1A1A;
+        --bg-chat:            #0D0D0D;
+        --bg-surface:         #1C1C1E;
+        --bg-surface-2:       #242426;
+        --bg-surface-3:       #2C2C2E;
+        --bg-input:           #2C2C2E;
+        --bg-modal:           #1C1C1E;
+        --bg-overlay:         rgba(0, 0, 0, .65);
+
+        --bubble-in:          #1E1E1E;
+        --bubble-out:         #005C4B;
+
+        --text-primary:       #F2F2F7;
+        --text-secondary:     #AEAEB2;
+        --text-tertiary:      #636366;
+        --text-link:          #7B7EC0;
+
+        --border:             rgba(255, 255, 255, .08);
+        --border-strong:      rgba(255, 255, 255, .14);
+        --scrollbar-thumb:    rgba(255,255,255,.12);
+
+        --shadow-xs:   0 1px 2px rgba(0,0,0,.3);
+        --shadow-sm:   0 2px 8px rgba(0,0,0,.35);
+        --shadow-md:   0 4px 16px rgba(0,0,0,.40);
+        --shadow-lg:   0 8px 32px rgba(0,0,0,.45);
+        --shadow-xl:   0 16px 48px rgba(0,0,0,.55);
+    }
+}
+
+/* ──────────────────────────────────────────────────────────
+   4. ACCENT OVERRIDES
+────────────────────────────────────────────────────────── */
+[data-accent="teal"]    { --accent: var(--accent-teal);    --brand: var(--accent-teal);    }
+[data-accent="rose"]    { --accent: var(--accent-rose);    --brand: var(--accent-rose);    }
+[data-accent="amber"]   { --accent: var(--accent-amber);   --brand: var(--accent-amber);   }
+[data-accent="emerald"] { --accent: var(--accent-emerald); --brand: var(--accent-emerald); }
+[data-accent="violet"]  { --accent: var(--accent-violet);  --brand: var(--accent-violet);  }
+[data-accent="pink"]    { --accent: var(--accent-pink);    --brand: var(--accent-pink);    }
+[data-accent="sky"]     { --accent: var(--accent-sky);     --brand: var(--accent-sky);     }
+
+/* ──────────────────────────────────────────────────────────
+   5. BUBBLE STYLE OVERRIDES
+────────────────────────────────────────────────────────── */
+[data-bubble="square"] {
+    --radius-bubble-in:  4px;
+    --radius-bubble-out: 4px;
+}
+[data-bubble="minimal"] {
+    --radius-bubble-in:  8px;
+    --radius-bubble-out: 8px;
+    --bubble-in:         transparent;
+    --bubble-out:        transparent;
+    --bubble-in-shadow:  none;
+    --bubble-out-shadow: none;
+}
+
+/* ──────────────────────────────────────────────────────────
+   6. CHAT BACKGROUND OVERRIDES
+────────────────────────────────────────────────────────── */
+[data-chat-bg="dots"] .chat-messages {
+    background-image: radial-gradient(var(--border-strong) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+[data-chat-bg="lines"] .chat-messages {
+    background-image: repeating-linear-gradient(
+            0deg, var(--border) 0, var(--border) 1px,
+            transparent 1px, transparent 28px
+    );
+}
+[data-chat-bg="gradient"] .chat-messages {
+    background: linear-gradient(135deg, #e0f7fa 0%, #e8eaf6 100%);
+}
+[data-theme="dark"][data-chat-bg="gradient"] .chat-messages {
+    background: linear-gradient(135deg, #0d2137 0%, #1a0a2e 100%);
+}
+[data-chat-bg="dark"] .chat-messages {
+    background: #0f0f23;
+}
+
+/* ──────────────────────────────────────────────────────────
+   7. AVATAR FALLBACK COLORS
+────────────────────────────────────────────────────────── */
+[data-color="0"]  { --avatar-bg: #E57373; --avatar-fg: #fff; }
+[data-color="1"]  { --avatar-bg: #F06292; --avatar-fg: #fff; }
+[data-color="2"]  { --avatar-bg: #BA68C8; --avatar-fg: #fff; }
+[data-color="3"]  { --avatar-bg: #7986CB; --avatar-fg: #fff; }
+[data-color="4"]  { --avatar-bg: #64B5F6; --avatar-fg: #fff; }
+[data-color="5"]  { --avatar-bg: #4DD0E1; --avatar-fg: #fff; }
+[data-color="6"]  { --avatar-bg: #4DB6AC; --avatar-fg: #fff; }
+[data-color="7"]  { --avatar-bg: #81C784; --avatar-fg: #fff; }
+[data-color="8"]  { --avatar-bg: #FFD54F; --avatar-fg: #333; }
+[data-color="9"]  { --avatar-bg: #FFB74D; --avatar-fg: #fff; }
+[data-color="10"] { --avatar-bg: #FF8A65; --avatar-fg: #fff; }
+[data-color="11"] { --avatar-bg: #A1887F; --avatar-fg: #fff; }
+
+/* ──────────────────────────────────────────────────────────
+   8. BREAKPOINTS (as custom props for JS)
+────────────────────────────────────────────────────────── */
+:root {
+    --bp-sm:   480px;
+    --bp-md:   768px;
+    --bp-lg:   1024px;
+    --bp-xl:   1280px;
+    --bp-2xl:  1536px;
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آفلاین — Namak</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Vazirmatn', system-ui, sans-serif;
+            background: #f0f2f5;
+            color: #1c1c1e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100dvh;
+            padding: 24px;
+        }
+
+        .offline-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 48px 32px;
+            text-align: center;
+            max-width: 360px;
+            width: 100%;
+            box-shadow: 0 8px 40px rgba(0,0,0,.08);
+        }
+
+        .offline-card__icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .offline-card__title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .offline-card__text {
+            font-size: 14px;
+            color: #8e8e93;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        .offline-card__btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #5B5EA6;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform .15s, opacity .15s;
+        }
+
+        .offline-card__btn:active { transform: scale(.97); opacity: .9; }
+
+        .offline-status {
+            margin-top: 24px;
+            font-size: 12px;
+            color: #c7c7cc;
+        }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-8px); }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body              { background: #1c1c1e; color: #f2f2f7; }
+            .offline-card     { background: #2c2c2e; }
+            .offline-card__text { color: #636366; }
+        }
+    </style>
+</head>
+<body>
+<div class="offline-card">
+    <span class="offline-card__icon">📡</span>
+    <h1 class="offline-card__title">اتصال برقرار نیست</h1>
+    <p class="offline-card__text">
+        به نظر می‌رسد اینترنت شما قطع است.<br>
+        لطفاً اتصال را بررسی کنید و دوباره امتحان کنید.
+    </p>
+    <button class="offline-card__btn" onclick="location.reload()">
+        🔄 تلاش مجدد
+    </button>
+    <p class="offline-status" id="status">در حال بررسی اتصال...</p>
+</div>
+
+<script>
+    // Auto-retry when back online
+    window.addEventListener('online', () => {
+        document.getElementById('status').textContent = '✅ اتصال برقرار شد!';
+        setTimeout(() => location.href = '/', 800);
+    });
+
+    window.addEventListener('offline', () => {
+        document.getElementById('status').textContent = '❌ هنوز آفلاین هستید';
+    });
+
+    document.getElementById('status').textContent =
+        navigator.onLine ? '✅ اتصال موجود — بارگذاری مجدد...' : '❌ آفلاین';
+
+    if (navigator.onLine) setTimeout(() => location.href = '/', 500);
+</script>
+</body>
+</html>

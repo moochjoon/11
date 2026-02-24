@@ -1,0 +1,949 @@
+/* ============================================================
+   RESPONSIVE.CSS  —  Namak Messenger
+   Breakpoints, mobile layout, PWA, touch, print
+   Depends on: base.css, app.css, chat.css, profile.css,
+               settings.css, contacts.css
+   ============================================================
+
+   Breakpoints:
+     xs  — 0–479px      (small phones)
+     sm  — 480–767px    (phones landscape / large phones)
+     md  — 768–1023px   (tablets portrait)
+     lg  — 1024–1279px  (tablets landscape / small laptops)
+     xl  — 1280–1535px  (desktops)
+     2xl — 1536px+      (wide screens)
+   ============================================================ */
+
+/* ──────────────────────────────────────────────────────────
+   1. CSS CUSTOM PROPERTIES — per breakpoint overrides
+────────────────────────────────────────────────────────── */
+
+/* Tablet */
+@media (max-width: 1023px) {
+    :root {
+        --sidebar-width: 280px;
+        --msg-font-size: 14px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    :root {
+        --sidebar-width:      100%;
+        --msg-font-size:      14px;
+        --space-safe-bottom:  env(safe-area-inset-bottom, 0px);
+    }
+}
+
+/* Small phones */
+@media (max-width: 479px) {
+    :root {
+        --msg-font-size: 13px;
+        --text-2xl:      20px;
+        --text-xl:       17px;
+    }
+}
+
+/* ──────────────────────────────────────────────────────────
+   2. LARGE SCREENS  (1536px+)
+────────────────────────────────────────────────────────── */
+@media (min-width: 1536px) {
+    :root { --sidebar-width: 360px; }
+
+    .message-list           { padding: var(--space-4) var(--space-6); }
+    .msg-bubble             { max-width: min(600px, 65vw); }
+    .settings-main,
+    .profile-main,
+    .contacts-body          { padding: var(--space-8) var(--space-8) var(--space-12); }
+    .settings-main          { max-width: 780px; }
+    .profile-col            { max-width: 720px; }
+    .contacts-col           { max-width: 780px; }
+    .profile-media-grid     { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   3. DESKTOP  (1280–1535px)
+────────────────────────────────────────────────────────── */
+@media (min-width: 1280px) and (max-width: 1535px) {
+    .settings-sidebar { width: 260px; min-width: 260px; }
+    .contact-detail-panel { width: 340px; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   4. TABLET LANDSCAPE  (1024–1279px)
+────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) and (max-width: 1279px) {
+    :root { --sidebar-width: 260px; }
+
+    .settings-sidebar   { width: 220px; min-width: 220px; }
+    .settings-nav__item { padding: 8px var(--space-2); font-size: var(--text-xs); }
+
+    .contact-detail-panel { width: 300px; }
+    .profile-media-grid   { grid-template-columns: repeat(3, 1fr); }
+    .msg-bubble           { max-width: min(480px, 70vw); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   5. TABLET PORTRAIT  (768–1023px)
+────────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+
+    /* ── Settings: collapse nav to icon-only ── */
+    .settings-sidebar        { width: 64px; min-width: 64px; }
+    .settings-sidebar__header{ justify-content: center; padding: 0 var(--space-2); }
+    .settings-sidebar__header .settings-sidebar__title { display: none; }
+    .settings-nav__label     { display: none; }
+    .settings-nav__badge     { position: absolute; top: 4px; right: 4px; }
+    .settings-nav__item      {
+        justify-content: center;
+        padding:         10px var(--space-2);
+    }
+    .settings-nav__item .settings-nav__arrow { display: none; }
+    .settings-nav__icon-wrap { margin: 0; }
+    .settings-nav__group-label { display: none; }
+
+    /* ── Contact detail: narrower ── */
+    .contact-detail-panel { width: 280px; }
+
+    /* ── Profile media: 3-col ── */
+    .profile-media-grid { grid-template-columns: repeat(3, 1fr); }
+
+    /* ── Topbar: tighter ── */
+    .topbar { padding: 0 var(--space-3); }
+    .topbar__actions .btn-icon + .btn-icon { margin-left: 0; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   6. MOBILE  (≤ 767px)  — Main layout switches
+────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+
+    /* ────────────────────────────────────────────────────
+       6-A. App Shell: sidebar is full-screen overlay
+    ──────────────────────────────────────────────────── */
+    .app-shell {
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Sidebar becomes full-width panel */
+    .sidebar {
+        position:   absolute;
+        top:        0;
+        left:       0;
+        bottom:     0;
+        width:      100%;
+        z-index:    var(--z-sidebar);
+        transform:  translateX(0);
+        transition: transform var(--transition-slow);
+        will-change:transform;
+    }
+    [dir="rtl"] .sidebar {
+        left:  auto;
+        right: 0;
+    }
+
+    /* Hide sidebar when chat is open */
+    .app-shell--chat-open .sidebar {
+        transform: translateX(-100%);
+        pointer-events: none;
+    }
+    [dir="rtl"] .app-shell--chat-open .sidebar {
+        transform: translateX(100%);
+    }
+
+    /* Main panel is full-width, slid in */
+    .main-panel {
+        position:   absolute;
+        top:        0;
+        left:       0;
+        right:      0;
+        bottom:     0;
+        width:      100%;
+        transform:  translateX(100%);
+        transition: transform var(--transition-slow);
+        will-change:transform;
+        z-index:    calc(var(--z-sidebar) - 1);
+    }
+    [dir="rtl"] .main-panel {
+        transform: translateX(-100%);
+    }
+
+    .app-shell--chat-open .main-panel {
+        transform: translateX(0);
+    }
+
+    /* ── Back button in topbar ── */
+    .topbar__back {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    /* ────────────────────────────────────────────────────
+       6-B. Chat window
+    ──────────────────────────────────────────────────── */
+    .message-list {
+        padding:        var(--space-2) var(--space-3);
+        padding-bottom: var(--space-3);
+    }
+    .msg-bubble {
+        max-width: min(300px, 82vw);
+    }
+    .msg-actions {
+        /* show on long-press, not hover */
+        opacity:        0;
+        pointer-events: none;
+    }
+    /* touch long-press shows actions */
+    .msg-bubble.touch-active .msg-actions {
+        opacity:        1;
+        pointer-events: auto;
+    }
+
+    .chat-input-bar {
+        padding: var(--space-2);
+        padding-bottom: calc(var(--space-2) + var(--safe-bottom));
+    }
+    .chat-input { font-size: 16px; /* prevents iOS zoom */ }
+
+    .emoji-panel {
+        width:          100%;
+        left:           0;
+        right:          0;
+        bottom:         0;
+        border-radius:  var(--radius-2xl) var(--radius-2xl) 0 0;
+        position:       fixed;
+        z-index:        var(--z-modal);
+        transform-origin:bottom center;
+        animation:      slideUp var(--transition-base) both;
+        max-height:     50dvh;
+    }
+    .emoji-panel__grid { max-height: 200px; }
+
+    .attach-menu {
+        left:           0;
+        right:          0;
+        bottom:         0;
+        border-radius:  var(--radius-2xl) var(--radius-2xl) 0 0;
+        position:       fixed;
+        flex-direction: row;
+        flex-wrap:      wrap;
+        justify-content:center;
+        padding:        var(--space-4);
+        gap:            var(--space-3);
+        z-index:        var(--z-modal);
+        animation:      slideUp var(--transition-base) both;
+        transform-origin:bottom center;
+        padding-bottom: calc(var(--space-4) + var(--safe-bottom));
+    }
+    .attach-menu__item {
+        flex-direction: column;
+        align-items:    center;
+        gap:            var(--space-1);
+        padding:        var(--space-3);
+        font-size:      var(--text-xs);
+        min-width:      70px;
+        text-align:     center;
+        justify-content:center;
+        border-radius:  var(--radius-xl);
+    }
+    .attach-menu__icon {
+        width:  44px;
+        height: 44px;
+    }
+
+    .scroll-to-bottom {
+        bottom: calc(var(--space-2) + 60px + var(--safe-bottom));
+        right:  var(--space-3);
+    }
+    [dir="rtl"] .scroll-to-bottom { right: auto; left: var(--space-3); }
+
+    /* lightbox on mobile */
+    .lightbox__nav { display: none; }
+    .lightbox__media {
+        max-width:  100vw;
+        max-height: 75vh;
+        border-radius: 0;
+    }
+
+    /* ────────────────────────────────────────────────────
+       6-C. Settings
+    ──────────────────────────────────────────────────── */
+    .settings-page    { flex-direction: column; }
+    .settings-sidebar {
+        width:      100%;
+        min-width:  unset;
+        height:     auto;
+        border-right:  none;
+        border-bottom: 1px solid var(--border-light);
+    }
+    [dir="rtl"] .settings-sidebar {
+        border-left:   none;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    /* Nav scrolls horizontally */
+    .settings-nav {
+        flex-direction: row;
+        overflow-x:     auto;
+        overflow-y:     hidden;
+        scrollbar-width:none;
+        padding:        var(--space-2);
+        gap:            var(--space-1);
+        flex-wrap:      nowrap;
+    }
+    .settings-nav::-webkit-scrollbar { display: none; }
+    .settings-nav__group  { display: contents; }
+    .settings-nav__group-label { display: none; }
+    .settings-nav__item {
+        flex-direction: column;
+        align-items:    center;
+        gap:            4px;
+        padding:        var(--space-2) var(--space-3);
+        font-size:      10px;
+        white-space:    nowrap;
+        flex-shrink:    0;
+        min-width:      64px;
+    }
+    .settings-nav__label { display: block; }
+    .settings-nav__icon-wrap {
+        width:  32px;
+        height: 32px;
+    }
+    .settings-nav__icon-wrap svg { width: 16px; height: 16px; }
+    .settings-nav__arrow { display: none; }
+
+    .settings-content { overflow-y: auto; }
+    .settings-main    { padding: var(--space-4) var(--space-3) var(--space-8); }
+
+    /* ────────────────────────────────────────────────────
+       6-D. Profile
+    ──────────────────────────────────────────────────── */
+    .profile-main   { padding: var(--space-3) var(--space-3) var(--space-8); }
+    .profile-col    { gap: var(--space-3); }
+    .profile-hero-card__cover   { height: 80px; }
+    .profile-avatar-img,
+    .profile-avatar-fallback    { width: 72px; height: 72px; font-size: 26px; }
+    .profile-avatar-img         { border-width: 3px; }
+    .profile-avatar-fallback    { border-width: 3px; }
+    .profile-hero-card__avatar-row { margin-top: -36px; }
+    .profile-hero-card__name    { font-size: var(--text-xl); }
+    .profile-stats              { grid-template-columns: repeat(3, 1fr); }
+    .profile-stat__value        { font-size: var(--text-lg); }
+    .profile-media-grid         { grid-template-columns: repeat(3, 1fr); }
+    .profile-edit-name-row      { grid-template-columns: 1fr; }
+    .profile-cta-btn            { min-width: 60px; padding: var(--space-2) var(--space-3); }
+    .profile-qr-wrap canvas,
+    .profile-qr-wrap img        { width: 130px; height: 130px; }
+
+    /* ────────────────────────────────────────────────────
+       6-E. Contacts
+    ──────────────────────────────────────────────────── */
+    .contacts-body  { padding: var(--space-3) var(--space-3) var(--space-10); }
+    .contacts-col   { max-width: unset; }
+
+    .contact-detail-panel {
+        width:         100%;
+        top:           auto;
+        height:        92dvh;
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        border-left:   none;
+        border-top:    1px solid var(--border-light);
+        animation:     slideUp var(--transition-slow) both;
+    }
+    [dir="rtl"] .contact-detail-panel {
+        border-right: none;
+        border-top:   1px solid var(--border-light);
+        animation:    slideUp var(--transition-slow) both;
+    }
+    .contact-detail-panel__topbar {
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    }
+
+    /* Drag handle on bottom sheets */
+    .contact-detail-panel::before {
+        content:       '';
+        display:       block;
+        width:         40px;
+        height:        4px;
+        background:    var(--border);
+        border-radius: var(--radius-full);
+        margin:        var(--space-2) auto 0;
+        flex-shrink:   0;
+    }
+
+    .alpha-jump { right: 2px; }
+    [dir="rtl"] .alpha-jump { right: auto; left: 2px; }
+
+    .invite-channels { grid-template-columns: repeat(4, 1fr); gap: var(--space-2); }
+
+    /* ────────────────────────────────────────────────────
+       6-F. Modals & Bottom sheets
+    ──────────────────────────────────────────────────── */
+    .modal-overlay { align-items: flex-end; }
+    .modal {
+        width:         100%;
+        max-width:     100%;
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        margin:        0;
+        max-height:    92dvh;
+        animation:     slideUp var(--transition-base) both;
+    }
+    /* Drag handle */
+    .modal::before {
+        content:       '';
+        display:       block;
+        width:         40px;
+        height:        4px;
+        background:    var(--border);
+        border-radius: var(--radius-full);
+        margin:        var(--space-2) auto -var(--space-1);
+    }
+
+    /* Dropdown menus become bottom sheets */
+    .dropdown-menu {
+        position:      fixed;
+        top:           auto;
+        left:          0 !important;
+        right:         0 !important;
+        bottom:        0;
+        width:         100%;
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        padding-bottom:calc(var(--space-3) + var(--safe-bottom));
+        max-height:    70dvh;
+        overflow-y:    auto;
+        animation:     slideUp var(--transition-base) both;
+        transform-origin: bottom center;
+    }
+
+    /* Context menus stay near tap point but capped */
+    .msg-ctx-menu {
+        position:  fixed;
+        max-width: calc(100vw - var(--space-6));
+        max-height:70dvh;
+        overflow-y:auto;
+    }
+
+    /* ────────────────────────────────────────────────────
+       6-G. Sidebar footer nav on mobile
+    ──────────────────────────────────────────────────── */
+    .sidebar__footer {
+        height:        56px;
+        min-height:    56px;
+        padding-bottom:calc(var(--space-2) + var(--safe-bottom));
+    }
+    .sidebar__nav-item      { min-width: 44px; font-size: 9px; padding: var(--space-1); }
+    .sidebar__nav-item svg  { width: 20px; height: 20px; }
+
+    /* ────────────────────────────────────────────────────
+       6-H. Topbar on mobile
+    ──────────────────────────────────────────────────── */
+    .topbar {
+        padding:     0 var(--space-2);
+        height:      56px;
+        min-height:  56px;
+        padding-top: var(--safe-top);
+    }
+    .topbar__name   { font-size: var(--text-sm); }
+    .topbar__status { font-size: 10px; }
+
+    /* ────────────────────────────────────────────────────
+       6-I. Welcome screen
+    ──────────────────────────────────────────────────── */
+    .chat-welcome { display: none; } /* hidden on mobile — sidebar IS the home */
+
+    /* ────────────────────────────────────────────────────
+       6-J. Auth pages
+    ──────────────────────────────────────────────────── */
+    .auth-page  { align-items: flex-end; padding: 0; }
+    .auth-card  {
+        width:         100%;
+        max-width:     100%;
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        padding:       var(--space-6) var(--space-5) calc(var(--space-6) + var(--safe-bottom));
+        animation:     slideUp var(--transition-slow) both;
+        min-height:    auto;
+        max-height:    95dvh;
+        overflow-y:    auto;
+    }
+    .auth-logo-wrap { margin-bottom: var(--space-4); }
+
+    /* OTP input cells */
+    .otp-input { width: 44px; height: 52px; font-size: var(--text-xl); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   7. SMALL PHONES  (≤ 479px)
+────────────────────────────────────────────────────────── */
+@media (max-width: 479px) {
+
+    .msg-bubble { max-width: 86vw; }
+
+    /* Profile hero */
+    .profile-hero-card__body          { padding: 0 var(--space-3) var(--space-4); }
+    .profile-hero-card__name          { font-size: var(--text-lg); }
+    .profile-hero-card__avatar-row    { padding: 0 var(--space-3); }
+    .profile-hero-card__quick-actions .btn { display: none; }
+    .profile-hero-card__quick-actions .btn:first-child { display: flex; }
+
+    /* Settings nav: even more compact */
+    .settings-nav__item { min-width: 56px; padding: var(--space-2); }
+
+    /* Contacts */
+    .contact-detail-panel__cta { grid-template-columns: repeat(4,1fr); gap: var(--space-1); }
+    .contact-detail-cta-btn    { padding: var(--space-2) var(--space-1); font-size: 9px; }
+    .contact-detail-cta-btn__icon { font-size: 18px; }
+
+    /* Invite channels */
+    .invite-channels { grid-template-columns: repeat(4,1fr); gap: var(--space-1); padding: var(--space-3); }
+    .invite-channel  { padding: var(--space-2); }
+    .invite-channel__icon  { font-size: 22px; }
+    .invite-channel__label { font-size: 9px; }
+
+    /* Member picker */
+    .language-grid { grid-template-columns: 1fr; }
+
+    /* OTP */
+    .otp-input { width: 38px; height: 46px; font-size: var(--text-lg); gap: var(--space-1); }
+
+    /* Chat input */
+    .chat-input-bar__send  { width: 36px; height: 36px; min-width: 36px; }
+    .chat-input            { padding: 8px var(--space-2); }
+
+    /* Topbar actions: hide secondary */
+    .topbar__actions .btn-icon:nth-child(n+3) { display: none; }
+
+    /* Sidebar header actions */
+    .sidebar__header-actions .btn-icon:nth-child(n+3) { display: none; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   8. LANDSCAPE ORIENTATION on small phones
+────────────────────────────────────────────────────────── */
+@media (max-height: 500px) and (orientation: landscape) {
+
+    .topbar,
+    .sidebar__header { height: 48px; min-height: 48px; }
+    .sidebar__footer { height: 48px; min-height: 48px; padding-bottom: var(--space-1); }
+    .sidebar__nav-item { padding: var(--space-1); font-size: 9px; }
+
+    .message-list  { padding: var(--space-1) var(--space-2); }
+    .chat-input-bar { padding: var(--space-1) var(--space-2) calc(var(--space-1) + var(--safe-bottom)); }
+
+    /* Modal: landscape bottom sheet smaller */
+    .modal          { max-height: 80dvh; }
+    .emoji-panel    { max-height: 70dvh; }
+    .emoji-panel__grid { max-height: 140px; }
+
+    .profile-hero-card__cover { height: 60px; }
+    .auth-card { padding: var(--space-4) var(--space-5) var(--space-4); max-height: 90dvh; }
+
+    /* Settings nav horizontal */
+    .settings-nav__item { min-width: 52px; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   9. TOUCH — hover state removal
+────────────────────────────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Remove hover effects that look broken on touch */
+    .chat-item:hover,
+    .contact-item:hover,
+    .settings-nav__item:hover,
+    .settings-row--clickable:hover,
+    .profile-info-row--clickable:hover,
+    .profile-mutual-item:hover,
+    .profile-file-item:hover,
+    .danger-row:hover,
+    .session-item:hover,
+    .blocked-item:hover,
+    .contacts-quick-action:hover      { background: transparent; }
+
+    /* Keep active state for touch feedback */
+    .chat-item:active,
+    .contact-item:active,
+    .settings-nav__item:active,
+    .settings-row--clickable:active,
+    .profile-info-row--clickable:active { background: var(--surface-3); }
+
+    /* Action btn always visible on touch */
+    .contact-item__actions            { opacity: 1; }
+    .contact-item__favorite           { opacity: 0.5; }
+    .contact-item--favorited .contact-item__favorite { opacity: 1; }
+
+    /* Profile copy always visible */
+    .profile-copy-btn                 { opacity: 0.5; }
+
+    /* Bigger tap targets */
+    .btn-icon                         { min-width: 40px; min-height: 40px; }
+    .chat-tab                         { min-height: 44px; }
+    .settings-row                     { min-height: 52px; }
+    .contact-item                     { min-height: 60px; }
+    .member-picker-item               { min-height: 56px; }
+
+    /* Disable transitions that feel laggy on low-end devices */
+    .msg-bubble,
+    .chat-item,
+    .contact-item             { transition-duration: 50ms; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   10. FINE POINTER  (mouse/trackpad only)
+────────────────────────────────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+
+    /* Narrower scrollbars */
+    ::-webkit-scrollbar       { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-thumb { border-radius: var(--radius-full); background: var(--border); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    ::-webkit-scrollbar-track { background: transparent; }
+
+    /* Show scrollbars only on hover */
+    .message-list,
+    .sidebar__body,
+    .settings-content,
+    .profile-main,
+    .contacts-body    { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+    .message-list:hover,
+    .sidebar__body:hover,
+    .settings-content:hover,
+    .profile-main:hover,
+    .contacts-body:hover { scrollbar-color: var(--border) transparent; }
+
+    /* Tooltip on hover */
+    [data-tooltip] {
+        position: relative;
+    }
+    [data-tooltip]::after {
+        content:          attr(data-tooltip);
+        position:         absolute;
+        bottom:           calc(100% + 6px);
+        left:             50%;
+        transform:        translateX(-50%) scale(0.8);
+        background:       rgba(0,0,0,0.78);
+        color:            white;
+        font-size:        11px;
+        font-weight:      var(--weight-medium);
+        white-space:      nowrap;
+        padding:          4px 8px;
+        border-radius:    var(--radius-sm);
+        pointer-events:   none;
+        opacity:          0;
+        transition:       opacity   var(--transition-fast),
+        transform var(--transition-fast);
+        z-index:          var(--z-tooltip);
+        line-height:      1.4;
+        box-shadow:       var(--shadow-md);
+    }
+    [data-tooltip]:hover::after {
+        opacity:   1;
+        transform: translateX(-50%) scale(1);
+    }
+
+    /* Cursor refinements */
+    .chat-item,
+    .contact-item,
+    .settings-nav__item   { cursor: pointer; }
+    .msg-bubble           { cursor: default; }
+    .msg-text             { cursor: text; }
+    .msg-image,
+    .msg-video,
+    .msg-audio__waveform  { cursor: pointer; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   11. REDUCED MOTION
+────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration:   0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration:  0.01ms !important;
+        scroll-behavior:      auto !important;
+    }
+
+    .typing-indicator__dot  { animation: none; opacity: 0.6; }
+    .online-strip__dot      { animation: none; }
+    .chat-recording-bar__dot{ animation: none; opacity: 1; }
+    .profile-hero-card__cover--animated { animation: none; }
+    .motion-preview         { animation: none; }
+    .skeleton               { animation: none; opacity: 0.6; }
+    .msg-skeleton__bubble,
+    .profile-skeleton-cover,
+    .contact-skeleton__avatar,
+    .contact-skeleton__line { animation: none; opacity: 0.5; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   12. HIGH CONTRAST  (forced-colors / prefers-contrast)
+────────────────────────────────────────────────────────── */
+@media (prefers-contrast: more) {
+    :root {
+        --border:             rgba(0,0,0,0.4);
+        --border-light:       rgba(0,0,0,0.2);
+        --text-muted:         var(--text-secondary);
+    }
+    .msg-bubble,
+    .settings-card,
+    .profile-hero-card,
+    .contacts-list-card { border-width: 2px; }
+    .btn-primary        { outline: 2px solid var(--primary); }
+    .form-input:focus   { outline: 3px solid var(--primary); }
+}
+
+@media (forced-colors: active) {
+    .btn-primary        { forced-color-adjust: none; background: ButtonText; color: ButtonFace; }
+    .avatar             { forced-color-adjust: none; }
+    .msg-bubble         { border: 1px solid ButtonText; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   13. DARK MODE MEDIA QUERY  (system preference fallback)
+────────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        /* Apply dark tokens when no explicit theme is set */
+        --bg:                 #0f0f0f;
+        --surface:            #1a1a1a;
+        --surface-2:          #222222;
+        --surface-3:          #2a2a2a;
+        --surface-elevated:   #252525;
+        --text:               #f0f0f0;
+        --text-secondary:     #b0b0b0;
+        --text-muted:         #707070;
+        --border:             rgba(255,255,255,0.1);
+        --border-light:       rgba(255,255,255,0.06);
+        --input-bg:           #2a2a2a;
+        --input-bg-focus:     #323232;
+        --sidebar-bg:         #141414;
+        --sidebar-hover:      rgba(255,255,255,0.05);
+        --sidebar-active:     rgba(var(--primary-rgb),0.18);
+        --bubble-in:          #272727;
+        --bubble-in-text:     #e8e8e8;
+        --bubble-out:         #1b4a2e;
+        --bubble-out-text:    #d4f0e0;
+        --bubble-meta:        rgba(255,255,255,0.45);
+        --overlay-light:      rgba(255,255,255,0.08);
+        --chat-bg:            #111111;
+    }
+}
+
+/* ──────────────────────────────────────────────────────────
+   14. PWA STANDALONE MODE
+────────────────────────────────────────────────────────── */
+@media (display-mode: standalone) {
+    :root {
+        --safe-top:    env(safe-area-inset-top,    0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+        --safe-left:   env(safe-area-inset-left,   0px);
+        --safe-right:  env(safe-area-inset-right,  0px);
+    }
+
+    /* Extend top bars into status bar area */
+    .sidebar__header,
+    .topbar,
+    .contacts-topbar,
+    .settings-sidebar__header { padding-top: calc(var(--space-0) + var(--safe-top)); height: calc(60px + var(--safe-top)); }
+
+    /* Extend bottom bars into home-indicator area */
+    .sidebar__footer { padding-bottom: calc(var(--space-1) + var(--safe-bottom)); height: calc(56px + var(--safe-bottom)); }
+    .chat-input-bar  { padding-bottom: calc(var(--space-2) + var(--safe-bottom)); }
+
+    /* Remove browser chrome padding */
+    body { padding: 0; }
+
+    /* iOS PWA: disable overscroll bounce on root */
+    html, body { overscroll-behavior: none; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   15. PRINT
+────────────────────────────────────────────────────────── */
+@media print {
+
+    /* Hide chrome */
+    .sidebar,
+    .topbar,
+    .chat-input-bar,
+    .scroll-to-bottom,
+    .msg-actions,
+    .emoji-panel,
+    .attach-menu,
+    .pinned-msg-bar,
+    .status-bar,
+    .sidebar__footer,
+    .alpha-jump               { display: none !important; }
+
+    /* Full-width message area */
+    .app-body,
+    .app-shell,
+    .main-panel,
+    .chat-window,
+    .message-list             {
+        height:   auto !important;
+        overflow: visible !important;
+        width:    100% !important;
+        position: static !important;
+        transform:none !important;
+    }
+
+    /* Clean bubbles */
+    .msg-bubble {
+        border:     1px solid #ccc !important;
+        box-shadow: none !important;
+        max-width:  75% !important;
+        color:      #000 !important;
+        background: #fff !important;
+    }
+    .msg-row--out .msg-bubble { background: #e8f5e9 !important; }
+
+    /* Show timestamps */
+    .msg-meta__time { color: #666 !important; }
+
+    /* Remove animations */
+    * { animation: none !important; transition: none !important; }
+
+    /* Page breaks */
+    .msg-date-separator { page-break-before: auto; }
+    .msg-row            { page-break-inside: avoid; }
+
+    /* Font */
+    body { font-size: 11pt; line-height: 1.4; color: #000; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   16. UTILITY HELPERS  (responsive show/hide)
+────────────────────────────────────────────────────────── */
+
+/* Hide on mobile */
+.hide-mobile { }
+@media (max-width: 767px) {
+    .hide-mobile  { display: none !important; }
+    .show-mobile  { display: flex !important; }
+    .show-mobile-block { display: block !important; }
+}
+
+/* Hide on desktop */
+.show-mobile,
+.show-mobile-block { display: none; }
+@media (min-width: 768px) {
+    .hide-desktop { display: none !important; }
+    .show-desktop { display: flex !important; }
+}
+
+/* Hide on tablet (768–1023) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .hide-tablet { display: none !important; }
+    .show-tablet { display: flex !important; }
+}
+
+/* Truncate text utilities */
+.truncate       { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.truncate-2     { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.truncate-3     { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Fluid container */
+.container-fluid {
+    width:     100%;
+    padding:   0 var(--space-4);
+    margin:    0 auto;
+}
+@media (min-width: 1280px) {
+    .container-fluid { padding: 0 var(--space-6); }
+}
+
+/* Full-height helpers */
+.h-full       { height: 100%; }
+.h-screen     { height: 100dvh; }
+.min-h-0      { min-height: 0; }
+.flex-1       { flex: 1; min-width: 0; }
+.flex-shrink-0{ flex-shrink: 0; }
+.overflow-hidden { overflow: hidden; }
+
+/* Gap utilities (responsive) */
+@media (max-width: 767px) {
+    .gap-responsive { gap: var(--space-3); }
+}
+@media (min-width: 768px) {
+    .gap-responsive { gap: var(--space-5); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   17. SWIPE GESTURE HINTS  (mobile-only visual cues)
+────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+
+    /* Swipe-to-reply indicator */
+    .msg-row--swipe-hint .msg-bubble {
+        transform: translateX(-12px);
+        transition: transform var(--transition-fast);
+    }
+    [dir="rtl"] .msg-row--swipe-hint .msg-bubble {
+        transform: translateX(12px);
+    }
+    .msg-row--swipe-hint .msg-bubble::before {
+        content:         '';
+        position:        absolute;
+        left:            -28px;
+        top:             50%;
+        transform:       translateY(-50%);
+        width:           22px;
+        height:          22px;
+        background:      var(--surface-elevated);
+        border-radius:   50%;
+        box-shadow:      var(--shadow-sm);
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239e9e9e' stroke-width='2'%3E%3Cpath d='M9 17H5a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3'/%3E%3Cpath d='M15 19l-4-4 4-4'/%3E%3Cpath d='M19 15H11'/%3E%3C/svg%3E");
+        background-size:  14px;
+        background-repeat:no-repeat;
+        background-position:center;
+        opacity:         0.8;
+    }
+    [dir="rtl"] .msg-row--swipe-hint .msg-bubble::before {
+        left:  auto;
+        right: -28px;
+    }
+
+    /* Chat list swipe-to-archive hint */
+    .chat-item--swiping-left {
+        transform: translateX(-60px);
+        transition: transform 0.15s ease;
+    }
+    .chat-item--swiping-right {
+        transform: translateX(60px);
+        transition: transform 0.15s ease;
+    }
+    .chat-item__swipe-action {
+        position:        absolute;
+        top:             0;
+        bottom:          0;
+        width:           60px;
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+        font-size:       22px;
+        pointer-events:  none;
+    }
+    .chat-item__swipe-action--archive {
+        right:      0;
+        background: var(--warning);
+        color:      white;
+    }
+    .chat-item__swipe-action--delete {
+        right:      0;
+        background: var(--danger);
+        color:      white;
+    }
+    .chat-item__swipe-action--read {
+        left:       0;
+        background: var(--primary);
+        color:      white;
+    }
+    [dir="rtl"] .chat-item__swipe-action--archive { right: auto; left: 0; }
+    [dir="rtl"] .chat-item__swipe-action--delete  { right: auto; left: 0; }
+    [dir="rtl"] .chat-item__swipe-action--read    { left: auto; right: 0; }
+}

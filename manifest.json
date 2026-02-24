@@ -1,0 +1,222 @@
+{
+  "name": "Namak Messenger",
+  "short_name": "Namak",
+  "description": "A fast, private and beautiful messenger",
+  "id": "namak-messenger",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "theme_color": "#5B5EA6",
+  "background_color": "#FFFFFF",
+  "lang": "fa",
+  "dir": "rtl",
+
+  "icons": [
+    {
+      "src": "/assets/icons/icon-48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/assets/screenshots/screen-mobile-1.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Chat list"
+    },
+    {
+      "src": "/assets/screenshots/screen-mobile-2.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Chat view"
+    },
+    {
+      "src": "/assets/screenshots/screen-desktop-1.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Desktop view"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "چت جدید",
+      "short_name": "چت",
+      "description": "شروع گفتگوی جدید",
+      "url": "/?action=new-chat",
+      "icons": [{ "src": "/assets/icons/shortcut-chat.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "مخاطبین",
+      "short_name": "مخاطبین",
+      "description": "نمایش مخاطبین",
+      "url": "/contacts",
+      "icons": [{ "src": "/assets/icons/shortcut-contacts.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "پیام‌های ذخیره‌شده",
+      "short_name": "ذخیره‌شده",
+      "description": "نمایش پیام‌های ذخیره شده",
+      "url": "/saved",
+      "icons": [{ "src": "/assets/icons/shortcut-saved.png", "sizes": "96x96" }]
+    }
+  ],
+
+  "share_target": {
+    "action": "/share-target",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text":  "text",
+      "url":   "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": ["image/*", "video/*", "audio/*", ".pdf", ".doc", ".docx", ".zip"]
+        }
+      ]
+    }
+  },
+
+  "protocol_handlers": [
+    {
+      "protocol": "web+namak",
+      "url": "/?uri=%s"
+    }
+  ],
+
+  "file_handlers": [
+    {
+      "action": "/open-file",
+      "accept": {
+        "image/*":  [".jpg", ".jpeg", ".png", ".gif", ".webp"],
+        "video/*":  [".mp4", ".webm", ".mov"],
+        "audio/*":  [".mp3", ".ogg", ".wav", ".m4a"]
+      },
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }],
+      "launch_type": "single-client"
+    }
+  ],
+
+  "handle_links": "preferred",
+
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+
+  "categories": ["social", "communication", "utilities"],
+
+  "iarc_rating_id": "",
+
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=ir.namak.messenger",
+      "id":  "ir.namak.messenger"
+    },
+    {
+      "platform": "itunes",
+      "url": "https://apps.apple.com/app/namak-messenger/id0000000000"
+    }
+  ],
+
+  "prefer_related_applications": false,
+
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+
+  "window_controls_overlay": {
+    "enabled": true
+  },
+
+  "widgets": [
+    {
+      "name":        "Namak Unread",
+      "short_name":  "Unread",
+      "description": "نمایش پیام‌های خوانده‌نشده",
+      "tag":         "namak-unread",
+      "template":    "namak-widget-unread",
+      "ms_ac_template": "/assets/widgets/unread-template.json",
+      "data":        "/api/v1/widgets/unread",
+      "type":        "application/json",
+      "screenshots": [
+        {
+          "src":   "/assets/screenshots/widget-unread.png",
+          "sizes": "400x200",
+          "label": "Unread messages widget"
+        }
+      ],
+      "icons": [
+        { "src": "/assets/icons/icon-192.png", "sizes": "192x192" }
+      ],
+      "backgrounds": [
+        { "src": "/assets/widgets/bg-light.png", "sizes": "400x200" }
+      ],
+      "update": 900
+    }
+  ]
+}
