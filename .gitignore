@@ -1,0 +1,77 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.backup
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# Composer
+vendor/
+composer.lock
+
+# Node modules
+node_modules/
+package-lock.json
+yarn.lock
+
+# Storage & Logs
+storage/logs/*
+!storage/logs/.gitkeep
+storage/cache/*
+!storage/cache/.gitkeep
+storage/session/*
+!storage/session/.gitkeep
+storage/uploads/*
+!storage/uploads/.gitkeep
+storage/internal/*
+!storage/internal/.gitkeep
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+*.temp
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing
+coverage/
+.phpunit.result.cache
+phpunit.coverage.xml
+.coverage
+
+# Build & Dist
+dist/
+build/
+*.zip
+*.tar.gz
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Misc
+.env.dusk.local
+.env.testing
+.env.testing.local
+public/hot
+public/storage
+resources/css/compiled/
+resources/css/app.css
+resources/js/app.js
+bootstrap/cache/
+storage/debugbar/
